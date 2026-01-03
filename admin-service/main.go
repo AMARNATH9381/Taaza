@@ -50,6 +50,7 @@ func main() {
 				users.GET("/:id/sessions", handlers.GetUserSessions)
 			}
 			
+			admin.DELETE("/addresses/:id", handlers.DeleteAddress)
 			admin.GET("/activity/recent", handlers.GetRecentActivity)
 			admin.POST("/sessions/:id/revoke", handlers.RevokeSession)
 		}

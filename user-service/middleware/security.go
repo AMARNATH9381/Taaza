@@ -46,7 +46,7 @@ func SecurityHeaders() gin.HandlerFunc {
 // Rate limiting middleware
 func RateLimit() gin.HandlerFunc {
 	requests := make(map[string][]time.Time)
-	const maxRequests = 10
+	const maxRequests = 100 // Increased from 10 to 100 requests per minute
 	const timeWindow = time.Minute
 
 	return func(c *gin.Context) {

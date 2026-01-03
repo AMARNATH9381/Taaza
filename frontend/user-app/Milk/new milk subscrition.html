@@ -1342,7 +1342,7 @@
     <script src="../js/data-api.js"></script>
     <script src="../js/subscription-manager.js"></script>
     <script src="../js/addresses-api.js"></script>
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&libraries=places&callback=initGoogleMaps"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCTBpRefq3kQWU79YiRZOeGb7jamVPHHnw&libraries=places"></script>
 </head>
 
 <body class="font-display bg-background-light dark:bg-zinc-900 text-background-dark dark:text-background-light">
@@ -1760,61 +1760,95 @@
                     <span class="material-symbols-outlined mr-2">notifications_active</span>
                     <p class="text-sm font-medium">We'll notify you when this milk type is back in stock!</p>
                 </div>
-                <p class="text-xs text-orange-500 dark:text-orange-300 mt-1 ml-7">Please provide your preferences below:</p>
+                <p class="text-xs text-orange-500 dark:text-orange-300 mt-1 ml-7">Please provide your details below. We'll send you an email and SMS when stock is available.</p>
             </div>
 
             <!-- User Details -->
             <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Your Name</label>
-                <input type="text" id="notify-name" class="w-full p-3 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-700 text-gray-800 dark:text-gray-200" placeholder="Enter your name">
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Your Name <span class="text-red-500">*</span>
+                </label>
+                <input type="text" id="notify-name" class="w-full p-3 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-700 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors" placeholder="Enter your full name" maxlength="100">
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">We'll use this to personalize your notification</p>
             </div>
-            
+
             <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Phone Number</label>
-                <input type="tel" id="notify-phone" class="w-full p-3 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-700 text-gray-800 dark:text-gray-200" placeholder="Enter your phone number">
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Phone Number <span class="text-red-500">*</span>
+                </label>
+                <input type="tel" id="notify-phone" class="w-full p-3 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-700 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors" placeholder="Enter your phone number" maxlength="15">
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">We'll send SMS updates to this number</p>
             </div>
 
             <!-- Milk Preferences -->
             <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Milk Type</label>
-                <select id="notify-milk-type" class="w-full p-3 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-700 text-gray-800 dark:text-gray-200">
-                    <option value="buffalo">Buffalo Milk</option>
-                    <option value="cow">Cow Milk</option>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Milk Type <span class="text-red-500">*</span>
+                </label>
+                <select id="notify-milk-type" class="w-full p-3 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-700 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors">
+                    <option value="">Select milk type</option>
+                    <option value="buffalo">🐃 Buffalo Milk - Rich & Creamy</option>
+                    <option value="cow">🐄 Cow Milk - Light & Healthy</option>
                 </select>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Choose the type of milk you want to be notified about</p>
             </div>
 
             <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Quantity Needed</label>
-                <select id="notify-quantity" class="w-full p-3 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-700 text-gray-800 dark:text-gray-200">
-                    <option value="0.5">0.5L</option>
-                    <option value="0.75">0.75L</option>
-                    <option value="1.0">1.0L</option>
-                    <option value="1.25">1.25L</option>
-                    <option value="1.5">1.5L</option>
-                    <option value="1.75">1.75L</option>
-                    <option value="2.0">2.0L</option>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Quantity Needed <span class="text-red-500">*</span>
+                </label>
+                <select id="notify-quantity" class="w-full p-3 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-700 text-gray-800 dark:text-gray-200 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors">
+                    <option value="">Select quantity</option>
+                    <option value="0.5">0.5L - Perfect for coffee/tea</option>
+                    <option value="0.75">0.75L - Good for small family</option>
+                    <option value="1.0">1.0L - Standard daily consumption</option>
+                    <option value="1.25">1.25L - For regular users</option>
+                    <option value="1.5">1.5L - Family size</option>
+                    <option value="1.75">1.75L - Large family</option>
+                    <option value="2.0">2.0L - Bulk requirement</option>
                 </select>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Select the quantity you typically need</p>
             </div>
 
-            <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Delivery Time Preference</label>
-                <div class="space-y-2">
-                    <label class="flex items-center">
-                        <input type="checkbox" id="notify-morning" class="mr-2">
-                        <span>Morning Delivery (6:00 AM - 9:00 AM)</span>
+            <div class="mb-6">
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                    Delivery Time Preference <span class="text-red-500">*</span>
+                </label>
+                <div class="space-y-3">
+                    <label class="flex items-center p-3 border border-gray-300 dark:border-zinc-600 rounded-lg hover:bg-gray-50 dark:hover:bg-zinc-700 cursor-pointer transition-colors">
+                        <input type="checkbox" id="notify-morning" class="mr-3 w-4 h-4 text-orange-600 focus:ring-orange-500">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg">🌅</span>
+                            <div>
+                                <span class="font-medium text-gray-800 dark:text-gray-200">Morning Delivery</span>
+                                <p class="text-xs text-gray-600 dark:text-gray-400">6:00 AM - 9:00 AM</p>
+                            </div>
+                        </div>
                     </label>
-                    <label class="flex items-center">
-                        <input type="checkbox" id="notify-evening" class="mr-2">
-                        <span>Evening Delivery (5:30 PM - 7:30 PM)</span>
+                    <label class="flex items-center p-3 border border-gray-300 dark:border-zinc-600 rounded-lg hover:bg-gray-50 dark:hover:bg-zinc-700 cursor-pointer transition-colors">
+                        <input type="checkbox" id="notify-evening" class="mr-3 w-4 h-4 text-orange-600 focus:ring-orange-500">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg">🌆</span>
+                            <div>
+                                <span class="font-medium text-gray-800 dark:text-gray-200">Evening Delivery</span>
+                                <p class="text-xs text-gray-600 dark:text-gray-400">5:30 PM - 7:30 PM</p>
+                            </div>
+                        </div>
                     </label>
                 </div>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">Select one or both delivery times when you'd like to receive notifications</p>
             </div>
 
             <div class="mt-6 flex justify-end gap-3">
                 <button type="button" onclick="closeNotifyModal()"
-                    class="px-4 py-2 border border-gray-300 dark:border-zinc-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-zinc-700 transition-colors">Cancel</button>
+                    class="px-6 py-2 border border-gray-300 dark:border-zinc-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-zinc-700 transition-colors font-medium">
+                    Cancel
+                </button>
                 <button type="button" onclick="submitNotificationRequest()"
-                    class="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors">Notify Me</button>
+                    class="px-6 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 disabled:bg-orange-300 disabled:cursor-not-allowed transition-colors font-medium flex items-center gap-2">
+                    <span class="material-symbols-outlined text-sm">notifications</span>
+                    <span>Notify Me</span>
+                </button>
             </div>
         </div>
     </div>
@@ -1846,6 +1880,10 @@
                         <label class="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">ZIP</label>
                         <input id="address-zip" class="w-full p-3 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-700 text-gray-800 dark:text-gray-200" type="text" required />
                     </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">State</label>
+                    <input id="address-state" class="w-full p-3 border border-gray-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-700 text-gray-800 dark:text-gray-200" type="text" placeholder="State/Province (optional)" />
                 </div>
                 <div>
                     <label class="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Country</label>
@@ -2092,10 +2130,7 @@
         let selectedLocation = null;
         let autocomplete = null;
 
-        // Initialize Google Maps callback
-        window.initGoogleMaps = function() {
-            console.log('Google Maps loaded');
-        };
+        // Google Maps is loaded synchronously now
 
         // Load addresses from API
         async function loadAddresses() {
@@ -2355,6 +2390,15 @@
             showSuccessToast('Location selected');
         }
 
+        // Parse latitude/longitude values for API submission
+        function parseLatitudeLongitude(value) {
+            if (!value || value.trim() === '') {
+                return null;
+            }
+            const num = parseFloat(value);
+            return isNaN(num) ? null : num;
+        }
+
         // Check if user is authenticated
         function checkAuthentication() {
             const token = localStorage.getItem('authToken') || localStorage.getItem('token');
@@ -2396,10 +2440,11 @@
                     label: document.getElementById('address-label').value.trim(),
                     address_line: document.getElementById('address-line').value.trim(),
                     city: document.getElementById('address-city').value.trim(),
+                    state: document.getElementById('address-state').value.trim() || '',
                     zip_code: document.getElementById('address-zip').value.trim(),
                     country: document.getElementById('address-country').value.trim(),
-                    latitude: document.getElementById('address-lat').value || null,
-                    longitude: document.getElementById('address-lng').value || null,
+                    latitude: parseLatitudeLongitude(document.getElementById('address-lat').value),
+                    longitude: parseLatitudeLongitude(document.getElementById('address-lng').value),
                     is_default: document.getElementById('address-default').checked
                 };
                 
@@ -2555,6 +2600,13 @@
             document.getElementById('notify-morning').checked = timeSlot === 'morning';
             document.getElementById('notify-evening').checked = timeSlot === 'evening';
             
+            // Auto-fill user details from localStorage (editable)
+            const userName = localStorage.getItem('userName') || '';
+            const userMobile = localStorage.getItem('userMobile') || '';
+            
+            document.getElementById('notify-name').value = userName;
+            document.getElementById('notify-phone').value = userMobile;
+            
             // Store current context for submission
             window.notifyContext = { milkType, timeSlot, quantity };
             
@@ -2572,25 +2624,60 @@
         
         // Submit notification request
         async function submitNotificationRequest() {
+            // Clear any previous validation errors
+            clearValidationErrors();
+
             const name = document.getElementById('notify-name').value.trim();
             const phone = document.getElementById('notify-phone').value.trim();
             const milkType = document.getElementById('notify-milk-type').value;
-            const quantity = parseFloat(document.getElementById('notify-quantity').value);
+            const quantity = document.getElementById('notify-quantity').value;
             const morningSelected = document.getElementById('notify-morning').checked;
             const eveningSelected = document.getElementById('notify-evening').checked;
-            
+
             // Validation
+            let isValid = true;
+
             if (!name) {
-                showWarningToast('Please enter your name');
-                return;
+                showFieldError('notify-name', 'Please enter your name');
+                isValid = false;
+            } else if (name.length < 2) {
+                showFieldError('notify-name', 'Name must be at least 2 characters');
+                isValid = false;
             }
-            if (!phone || phone.length < 10) {
-                showWarningToast('Please enter valid phone number');
-                return;
+
+            if (!phone) {
+                showFieldError('notify-phone', 'Please enter your phone number');
+                isValid = false;
+            } else if (!validatePhoneNumber(phone)) {
+                showFieldError('notify-phone', 'Please enter a valid phone number');
+                isValid = false;
             }
+
+            if (!milkType) {
+                showFieldError('notify-milk-type', 'Please select a milk type');
+                isValid = false;
+            }
+
+            if (!quantity) {
+                showFieldError('notify-quantity', 'Please select a quantity');
+                isValid = false;
+            }
+
             if (!morningSelected && !eveningSelected) {
-                showWarningToast('Please select delivery time');
+                showFieldError('notify-morning', 'Please select at least one delivery time');
+                isValid = false;
+            }
+
+            if (!isValid) {
                 return;
+            }
+
+            // Get email from localStorage (use placeholder if not available)
+            let email = localStorage.getItem('userEmail') || '';
+            if (!email) {
+                // Use a placeholder email for now - user can update profile later
+                email = `${name.toLowerCase().replace(/\s+/g, '.')}@placeholder.com`;
+                console.log('Using placeholder email:', email);
             }
             
             // Show loading state
@@ -2607,6 +2694,7 @@
                 console.log('Submitting notification request:', {
                     customer_name: name,
                     phone_number: phone,
+                    email: email,
                     milk_type: milkType,
                     quantity: quantity,
                     time_slots: timeSlots
@@ -2617,6 +2705,7 @@
                     const requestData = {
                         customer_name: name,
                         phone_number: phone,
+                        email: email,
                         milk_type: milkType,
                         quantity: quantity,
                         time_slot: slot,
@@ -2658,6 +2747,47 @@
                 
                 showErrorToast('Failed to send notification request');
             }
+        }
+        
+        // Validation helper functions
+        function showFieldError(fieldId, message) {
+            const field = document.getElementById(fieldId);
+            const existingError = field.parentNode.querySelector('.field-error');
+            
+            if (existingError) {
+                existingError.remove();
+            }
+            
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'field-error text-red-500 text-xs mt-1';
+            errorDiv.textContent = message;
+            
+            field.parentNode.appendChild(errorDiv);
+            field.classList.add('border-red-500', 'focus:ring-red-500', 'focus:border-red-500');
+            field.classList.remove('border-gray-300', 'dark:border-zinc-600', 'focus:ring-orange-500', 'focus:border-orange-500');
+            
+            field.focus();
+        }
+        
+        function clearValidationErrors() {
+            // Clear all field errors
+            document.querySelectorAll('.field-error').forEach(error => error.remove());
+            
+            // Reset field styles
+            const fields = ['notify-name', 'notify-phone', 'notify-milk-type', 'notify-quantity'];
+            fields.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                if (field) {
+                    field.classList.remove('border-red-500', 'focus:ring-red-500', 'focus:border-red-500');
+                    field.classList.add('border-gray-300', 'dark:border-zinc-600', 'focus:ring-orange-500', 'focus:border-orange-500');
+                }
+            });
+        }
+        
+        function validatePhoneNumber(phone) {
+            // Basic phone validation - allow 10-15 digits, optionally starting with +
+            const phoneRegex = /^[\+]?[1-9][\d]{9,14}$/;
+            return phoneRegex.test(phone.replace(/\s+/g, ''));
         }
         
         // Generate milk type options with stock availability

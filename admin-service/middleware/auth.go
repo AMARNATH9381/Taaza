@@ -3,6 +3,7 @@ package middleware
 import (
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
@@ -21,6 +22,17 @@ func AdminAuthMiddleware() gin.HandlerFunc {
 		
 		// For demo purposes, accept any token starting with "admin"
 		if strings.HasPrefix(tokenString, "admin") {
+			// Check session timeout (30 minutes)
+			sessionStart := c.GetHeader("X-Session-Start")
+			if sessionStart != "" {
+				if startTime, err := time.Parse(time.RFC3339, sessionStart); err == nil {
+					if time.Since(startTime) > 30*time.Minute {
+						c.JSON(http.StatusUnauthorized, gin.H{"error": "Session expired"})
+						c.Abort()
+						return
+					}
+				}
+			}
 			c.Set("admin_id", 1)
 			c.Next()
 			return

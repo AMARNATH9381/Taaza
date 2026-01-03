@@ -97,12 +97,13 @@ class InventoryAPI {
         return this.request(`/notifications${query}`);
     }
 
-    async createNotification(customerName, phoneNumber, productId, timeSlot, quantity) {
+    async createNotification(customerName, phoneNumber, email, productId, timeSlot, quantity) {
         return this.request('/notifications', {
             method: 'POST',
             body: JSON.stringify({
                 customer_name: customerName,
                 phone_number: phoneNumber,
+                email: email,
                 product_id: productId,
                 time_slot: timeSlot,
                 quantity

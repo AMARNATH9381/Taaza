@@ -24,6 +24,10 @@ func ProxyToInventoryService(c *gin.Context) {
 	proxyRequest(c, os.Getenv("INVENTORY_SERVICE_URL"))
 }
 
+func ProxyToEmailService(c *gin.Context) {
+	proxyRequest(c, os.Getenv("EMAIL_SERVICE_URL"))
+}
+
 func proxyRequest(c *gin.Context, targetURL string) {
 	// Build target URL
 	url := targetURL + c.Request.URL.Path

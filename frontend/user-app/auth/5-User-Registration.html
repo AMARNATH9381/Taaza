@@ -438,6 +438,7 @@
                     if (response.ok) {
                         localStorage.setItem('userName', fullName);
                         localStorage.setItem('userMobile', mobileNumber);
+                        localStorage.setItem('userEmail', email);
                         localStorage.removeItem('loginEmail');
                         window.location.href = '../pages/7-Homepage.html';
                     } else {

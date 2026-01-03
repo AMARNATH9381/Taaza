@@ -90,24 +90,62 @@ class SessionManager {
             return;
         }
         
-        // If we have a token, validate it with backend
+        // If we have a token, validate it locally first
         if (token && this.requiresAuth()) {
             try {
-                const response = await fetch('/api/v1/users/profile', {
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    }
-                });
-                
-                if (!response.ok) {
-                    // Token is invalid/expired on backend
+                // Check if token is expired locally
+                if (this.isTokenExpired(token)) {
+                    console.log('Token expired locally, logging out');
                     this.logout();
+                    return;
+                }
+                
+                // Only validate with backend if token is close to expiry (< 1 hour)
+                const timeToExpiry = this.getTimeToExpiry(token);
+                if (timeToExpiry < 60 * 60 * 1000) { // Less than 1 hour
+                    const response = await fetch('/api/v1/users/profile', {
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                    
+                    if (!response.ok) {
+                        // Token is invalid/expired on backend
+                        this.logout();
+                    }
                 }
             } catch (error) {
                 console.error('Session validation failed:', error);
-                // On network error, don't logout - might be temporary
+                // On network error, don't logout immediately - might be temporary
+                // Only logout if it's a clear authentication error
+                if (error.message?.includes('401') || error.message?.includes('403')) {
+                    this.logout();
+                }
             }
+        }
+    }
+    
+    // Check if JWT token is expired
+    isTokenExpired(token) {
+        try {
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            const currentTime = Date.now() / 1000;
+            return payload.exp < currentTime;
+        } catch (error) {
+            console.error('Error parsing token:', error);
+            return true; // Consider invalid tokens as expired
+        }
+    }
+    
+    // Get time to expiry in milliseconds
+    getTimeToExpiry(token) {
+        try {
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            const currentTime = Date.now() / 1000;
+            return (payload.exp - currentTime) * 1000;
+        } catch (error) {
+            return 0;
         }
     }
     

@@ -76,6 +76,13 @@ func main() {
 			inventory.Any("/*path", handlers.ProxyToInventoryService)
 			inventory.Any("", handlers.ProxyToInventoryService)
 		}
+
+		// Email routes
+		email := v1.Group("/email")
+		{
+			email.Any("/*path", handlers.ProxyToEmailService)
+			email.Any("", handlers.ProxyToEmailService)
+		}
 	}
 
 	// Catch-all for other routes

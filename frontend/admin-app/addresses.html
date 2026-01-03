@@ -6,6 +6,7 @@
     <title>User Addresses - Tazza Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+    <script src="js/session-manager.js"></script>
     <style>
         .sidebar-item.active {
             background: linear-gradient(135deg, #3B82F6, #1D4ED8);
@@ -170,6 +171,7 @@
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Country</th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Default</th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Created</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Actions</th>
                                 </tr>
                             </thead>
                             <tbody id="addresses-table-body" class="bg-gray-800 divide-y divide-gray-700">
@@ -188,7 +190,7 @@
         const API_BASE = '/api/v1';
         let allAddresses = [];
 
-        // API Helper
+        // API Helper with session management
         async function apiCall(endpoint, options = {}) {
             try {
                 const response = await fetch(`${API_BASE}${endpoint}`, {
@@ -199,6 +201,14 @@
                     },
                     ...options
                 });
+                
+                if (response.status === 401 || response.status === 403) {
+                    showToast('Session expired. Please login again.', 'error');
+                    setTimeout(() => {
+                        window.location.href = '/admin/login.html';
+                    }, 2000);
+                    return null;
+                }
                 
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
@@ -212,12 +222,85 @@
             }
         }
 
+        // Delete address with custom confirmation
+        function deleteAddress(addressId, userName, addressLabel) {
+            showConfirmDialog(
+                'Delete Address',
+                `Are you sure you want to delete the address "${addressLabel}" for user ${userName}? This action cannot be undone.`,
+                async () => {
+                    try {
+                        const response = await fetch(`${API_BASE}/admin/addresses/${addressId}`, {
+                            method: 'DELETE',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': 'Bearer admin-token'
+                            }
+                        });
+                        
+                        if (response.ok) {
+                            showToast('Address deleted successfully', 'success');
+                            loadAddresses();
+                        } else {
+                            const errorData = await response.json();
+                            showToast(errorData.error || 'Failed to delete address', 'error');
+                        }
+                    } catch (error) {
+                        console.error('Error deleting address:', error);
+                        showToast('Failed to delete address', 'error');
+                    }
+                }
+            );
+        }
+
+        // Custom confirmation dialog
+        function showConfirmDialog(title, message, onConfirm) {
+            const modal = document.createElement('div');
+            modal.id = 'confirmDialog';
+            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+            modal.innerHTML = `
+                <div class="bg-gray-800 border border-gray-700 rounded-lg p-6 max-w-md mx-4">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mr-4">
+                            <span class="material-symbols-outlined text-red-600">warning</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-100">${title}</h3>
+                    </div>
+                    <p class="text-gray-300 mb-6">${message}</p>
+                    <div class="flex gap-3 justify-end">
+                        <button id="cancelBtn" class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors">
+                            Cancel
+                        </button>
+                        <button id="confirmBtn" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+                            Delete
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            document.getElementById('cancelBtn').onclick = () => {
+                document.body.removeChild(modal);
+            };
+            
+            document.getElementById('confirmBtn').onclick = () => {
+                document.body.removeChild(modal);
+                onConfirm();
+            };
+            
+            modal.onclick = (e) => {
+                if (e.target === modal) {
+                    document.body.removeChild(modal);
+                }
+            };
+        }
+
         // Load all addresses
         async function loadAddresses() {
             const tbody = document.getElementById('addresses-table-body');
             tbody.innerHTML = `
                 <tr>
-                    <td colspan="7" class="px-6 py-8 text-center text-gray-400">
+                    <td colspan="8" class="px-6 py-8 text-center text-gray-400">
                         <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto mb-2"></div>
                         Loading addresses...
                     </td>
@@ -227,7 +310,7 @@
             // Get all users first
             const usersData = await apiCall('/admin/users?limit=1000');
             if (!usersData || !usersData.users) {
-                tbody.innerHTML = '<tr><td colspan="7" class="px-6 py-8 text-center text-gray-400">Failed to load users</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="8" class="px-6 py-8 text-center text-gray-400">Failed to load users</td></tr>';
                 return;
             }
 
@@ -290,10 +373,17 @@
                                 <p class="text-sm text-gray-400">${addr.user_email}</p>
                             </div>
                         </div>
-                        ${addr.is_default ? 
-                            '<span class="inline-flex px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800"><span class="material-symbols-outlined text-xs mr-1">home</span>Default</span>' : 
-                            '<span class="inline-flex px-3 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">Secondary</span>'
-                        }
+                        <div class="flex items-center gap-2">
+                            ${addr.is_default ? 
+                                '<span class="inline-flex px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800"><span class="material-symbols-outlined text-xs mr-1">home</span>Default</span>' : 
+                                '<span class="inline-flex px-3 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">Secondary</span>'
+                            }
+                            <button data-delete-address="${addr.id}" data-user-name="${addr.user_name}" data-label="${addr.label}" 
+                                    class="p-2 text-red-400 hover:text-red-300 hover:bg-red-900/20 rounded-lg transition-colors" 
+                                    title="Delete Address">
+                                <span class="material-symbols-outlined text-sm">delete</span>
+                            </button>
+                        </div>
                     </div>
                     
                     <div class="space-y-3">
@@ -328,7 +418,7 @@
             tableContainer.classList.remove('hidden');
             
             if (!addresses.length) {
-                tbody.innerHTML = '<tr><td colspan="7" class="px-6 py-8 text-center text-gray-400">No addresses found</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="8" class="px-6 py-8 text-center text-gray-400">No addresses found</td></tr>';
                 return;
             }
             
@@ -365,6 +455,13 @@
                     </td>
                     <td class="px-6 py-4 text-sm text-gray-400">
                         ${new Date(addr.created_at).toLocaleDateString()}
+                    </td>
+                    <td class="px-6 py-4">
+                        <button data-delete-address="${addr.id}" data-user-name="${addr.user_name}" data-label="${addr.label}" 
+                                class="text-red-400 hover:text-red-300 p-1 rounded" 
+                                title="Delete Address">
+                            <span class="material-symbols-outlined text-sm">delete</span>
+                        </button>
                     </td>
                 </tr>
             `).join('');
@@ -465,6 +562,19 @@
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             loadAddresses();
+            
+            // Event delegation for delete buttons
+            document.body.addEventListener('click', function(e) {
+                const deleteBtn = e.target.closest('[data-delete-address]');
+                if (deleteBtn) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const addressId = deleteBtn.getAttribute('data-delete-address');
+                    const userName = deleteBtn.getAttribute('data-user-name');
+                    const label = deleteBtn.getAttribute('data-label');
+                    deleteAddress(addressId, userName, label);
+                }
+            });
         });
 
         // Add event listeners for real-time filtering

@@ -324,7 +324,7 @@ func RemoveBooking(c *gin.Context) {
 // GetNotifications returns all notification requests
 func GetNotifications(c *gin.Context) {
 	query := `
-		SELECT id, customer_name, phone_number, milk_type, quantity, time_slot, status, created_at, notified_at, notes
+		SELECT id, customer_name, phone_number, email, milk_type, quantity, time_slot, status, created_at, notified_at, notes
 		FROM notification_requests
 		ORDER BY created_at DESC
 	`
@@ -343,6 +343,7 @@ func GetNotifications(c *gin.Context) {
 			&notification.ID,
 			&notification.CustomerName,
 			&notification.PhoneNumber,
+			&notification.Email,
 			&notification.MilkType,
 			&notification.Quantity,
 			&notification.TimeSlot,
@@ -372,14 +373,14 @@ func CreateNotification(c *gin.Context) {
 	}
 
 	query := `
-		INSERT INTO notification_requests (customer_name, phone_number, milk_type, quantity, time_slot, notes)
-		VALUES ($1, $2, $3, $4, $5, $6)
+		INSERT INTO notification_requests (customer_name, phone_number, email, milk_type, quantity, time_slot, notes)
+		VALUES ($1, $2, $3, $4, $5, $6, $7)
 		RETURNING id, created_at
 	`
 
 	var id int
 	var createdAt time.Time
-	err := db.QueryRow(query, req.CustomerName, req.PhoneNumber, req.MilkType, req.Quantity, req.TimeSlot, req.Notes).Scan(&id, &createdAt)
+	err := db.QueryRow(query, req.CustomerName, req.PhoneNumber, req.Email, req.MilkType, req.Quantity, req.TimeSlot, req.Notes).Scan(&id, &createdAt)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create notification request"})
 		return

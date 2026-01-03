@@ -19,8 +19,11 @@ func LoadConfig() {
 	if os.Getenv("USER_SERVICE_URL") == "" {
 		os.Setenv("USER_SERVICE_URL", "http://user-service:8081")
 	}
-	if os.Getenv("ADMIN_SERVICE_URL") == "" {
-		os.Setenv("ADMIN_SERVICE_URL", "http://admin-service:8082")
+	if os.Getenv("INVENTORY_SERVICE_URL") == "" {
+		os.Setenv("INVENTORY_SERVICE_URL", "http://inventory-service:8083")
+	}
+	if os.Getenv("EMAIL_SERVICE_URL") == "" {
+		os.Setenv("EMAIL_SERVICE_URL", "http://email-service:8084")
 	}
 	if os.Getenv("REDIS_URL") == "" {
 		os.Setenv("REDIS_URL", "redis:6379")

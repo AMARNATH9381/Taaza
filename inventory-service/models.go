@@ -38,6 +38,7 @@ type NotificationRequest struct {
 	ID           int        `json:"id"`
 	CustomerName string     `json:"customer_name"`
 	PhoneNumber  string     `json:"phone_number"`
+	Email        string     `json:"email"`
 	MilkType     string     `json:"milk_type"`
 	Quantity     float64    `json:"quantity"`
 	TimeSlot     string     `json:"time_slot"`
@@ -50,6 +51,7 @@ type NotificationRequest struct {
 type CreateNotificationRequest struct {
 	CustomerName string  `json:"customer_name" binding:"required"`
 	PhoneNumber  string  `json:"phone_number" binding:"required"`
+	Email        string  `json:"email"`
 	MilkType     string  `json:"milk_type" binding:"required"`
 	Quantity     float64 `json:"quantity" binding:"required"`
 	TimeSlot     string  `json:"time_slot" binding:"required"`

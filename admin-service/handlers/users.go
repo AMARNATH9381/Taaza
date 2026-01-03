@@ -291,3 +291,38 @@ func GetUserAddresses(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"addresses": addresses})
 }
+
+func DeleteAddress(c *gin.Context) {
+	addressID, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid address ID"})
+		return
+	}
+
+	// Get address details for logging
+	var userID int
+	var label string
+	err = database.DB.QueryRow("SELECT user_id, label FROM user_addresses WHERE id = $1", addressID).Scan(&userID, &label)
+	if err == sql.ErrNoRows {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Address not found"})
+		return
+	}
+	if err != nil {
+		logrus.Error("Database error:", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
+		return
+	}
+
+	// Delete the address
+	_, err = database.DB.Exec("DELETE FROM user_addresses WHERE id = $1", addressID)
+	if err != nil {
+		logrus.Error("Database error:", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
+		return
+	}
+
+	// Log activity
+	utils.LogUserActivity(userID, "admin_address_delete", "Admin deleted address: "+label, c.ClientIP())
+
+	c.JSON(http.StatusOK, gin.H{"message": "Address deleted successfully"})
+}

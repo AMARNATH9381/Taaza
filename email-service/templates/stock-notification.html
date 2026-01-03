@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Milk Stock Available - Taaza</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f5f5f5; }
+        .container { max-width: 600px; margin: 0 auto; background-color: white; }
+        .header { background: linear-gradient(135deg, #FFD700, #FFC107); padding: 30px; text-align: center; }
+        .header h1 { color: #333; margin: 0; font-size: 28px; }
+        .content { padding: 30px; }
+        .notification-box { background-color: #f8f9fa; padding: 25px; border-radius: 8px; margin: 20px 0; border-left: 5px solid #FFD700; }
+        .milk-details { background-color: #fff; padding: 20px; border-radius: 8px; margin: 20px 0; border: 1px solid #e9ecef; }
+        .detail-row { display: flex; justify-content: space-between; margin-bottom: 10px; }
+        .detail-label { font-weight: bold; color: #666; }
+        .detail-value { color: #333; }
+        .button { display: inline-block; padding: 15px 30px; background-color: #FFD700; color: #333; text-decoration: none; border-radius: 25px; margin: 15px 0; font-weight: bold; }
+        .footer { background-color: #f8f9fa; padding: 20px; text-align: center; color: #666; font-size: 14px; }
+        .highlight { background-color: #FFF3CD; padding: 15px; border-radius: 5px; margin: 15px 0; border-left: 4px solid #FFC107; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🥛 Milk Stock Available!</h1>
+            <p style="color: #666; margin: 10px 0; font-size: 16px;">Fresh milk is back in stock at Taaza</p>
+        </div>
+
+        <div class="content">
+            <div class="notification-box">
+                <h2 style="color: #333; margin-bottom: 15px;">Hello {{.customer_name}}! 🎉</h2>
+                <p>Great news! The {{.milk_type}} milk you were waiting for is now available in stock.</p>
+            </div>
+
+            <div class="highlight">
+                <strong>📞 Your Contact:</strong> {{.phone_number}}<br>
+                <strong>⏰ Preferred Time:</strong> {{.time_slot}} Delivery
+            </div>
+
+            <div class="milk-details">
+                <h3 style="margin-top: 0; color: #333;">Stock Details</h3>
+                <div class="detail-row">
+                    <span class="detail-label">Milk Type:</span>
+                    <span class="detail-value">{{.milk_type}} Milk</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Quantity Requested:</span>
+                    <span class="detail-value">{{.quantity}} Liters</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Delivery Slot:</span>
+                    <span class="detail-value">{{.time_slot}} (6:00 AM - 9:00 AM / 5:30 PM - 7:30 PM)</span>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin: 30px 0;">
+                <a href="#" class="button">📱 Place Your Order Now</a>
+            </div>
+
+            <p style="color: #666; font-size: 14px; line-height: 1.6;">
+                <strong>Important:</strong> Stock availability is limited and subject to change. We recommend placing your order as soon as possible to secure your preferred delivery slot.
+            </p>
+
+            <p style="color: #666; font-size: 14px;">
+                If you have any questions, feel free to contact our support team.
+            </p>
+        </div>
+
+        <div class="footer">
+            <p>Thank you for choosing Taaza!</p>
+            <p>📧 support@taaza.com | 📞 +91-XXXX-XXXXXX</p>
+            <p style="font-size: 12px; color: #999;">This is an automated notification. Please do not reply to this email.</p>
+        </div>
+    </div>
+</body>
+</html>
